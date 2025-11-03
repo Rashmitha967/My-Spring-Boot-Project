@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Tracker</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e6f2e6 0%, #f9f9f9 100%);
+            color: #333;
+        }
+
+        nav {
+            background: #002b36;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        nav .logo svg {
+            height: 40px;
+            width: 40px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background: #5fdde5;
+            color: #002b36;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background-color: #28a74533; /* green overlay */
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #002b36;
+        }
+
+        .hero-content {
+            background: rgba(255,255,255,0.75);
+            padding: 20px 40px;
+            border-radius: 12px;
+            max-width: 700px;
+        }
+
+        .hero-content h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-content h3 {
+            font-weight: 500;
+            color: #004d1a; /* dark green text */
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Dashboard Summary Section */
+        .dashboard-summary {
+            text-align: center;
+            margin: 20px auto 30px auto;
+            max-width: 800px;
+            padding: 15px 25px;
+            background: #e6f9e6;
+            border-left: 6px solid #28a745;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #004d1a;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        main {
+            padding: 0 20px 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(90deg, #28a745, #82e0aa);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fbf9;
+        }
+
+        tr:hover {
+            background-color: #e3f7e3;
+            transform: scale(1.01);
+            transition: 0.3s ease;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 25px 0;
+            color: #666;
+            font-size: 15px;
+            border-top: 1px solid #ddd;
+            background-color: #f7f9fb;
+        }
+
+        footer span {
+            font-weight: 600;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">
+        <!-- Embedded SVG Logo without MG text -->
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" fill="#28a745"/>
+        </svg>
+    </div>
+    <ul>
+        <li><a href="#" th:href="@{/}">Home</a></li>
+        <li><a href="#" th:href="@{/employees/add}">Add Employee</a></li>
+        <li><a href="#" th:href="@{/reports}">Reports</a></li>
+        <li><a href="#" th:href="@{/about}">About</a></li>
+        <li><a href="#" th:href="@{/logout}">Logout</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Employee Tracker Dashboard</h1>
+        <h3>Monitor Employee, Visa & Location Details</h3>
+    </div>
+</section>
+
+<!-- Dashboard Summary Section -->
+<div class="dashboard-summary">
+    Welcome to the Employee Tracker! Use this dashboard to easily monitor employee details, track visa statuses, and manage work locations efficiently. All your essential data is displayed below in a clean, organized table for quick access.
+</div>
+
+<main>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Job Title</th>
+            <th>Email</th>
+            <th>Work Site Location</th>
+            <th>Home Location</th>
+            <th>Visa Type</th>
+            <th>Visa Status</th>
+            <th>Visa Expiry</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="emp : ${employeeList}">
+            <td th:text="${emp.firstName} + ' ' + ${emp.lastName}" data-label="Name">Full Name</td>
+            <td th:text="${emp.jobTitle}" data-label="Job Title">Job Title</td>
+            <td th:text="${emp.email}" data-label="Email">email@example.com</td>
+            <td th:text="${emp.worksiteLocation?.locationName}" data-label="Work Site Location">--</td>
+            <td th:text="${emp.employeeLocation?.locationName}" data-label="Home Location">--</td>
+            <td th:text="${emp.visaDetails?.visaType}" data-label="Visa Type">--</td>
+            <td th:text="${emp.visaDetails?.status}" data-label="Visa Status">--</td>
+            <td th:text="${emp.visaDetails?.expiryDate}" data-label="Visa Expiry">--</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer>
+    <p>Designed by <span>Rashmitha N</span></p>
+</footer>
+
+</body>
+</html>
